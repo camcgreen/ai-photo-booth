@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react'
-import { convertFileToBase64 } from '../utils/helpers'
+import { useState } from 'react'
+import { convertFileToBase64, getGeneratedImage } from '../utils/helpers'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
   const [image, setImage] = useState(null)
-  useEffect(() => {
-    // on mount
-  }, [])
   const handleSubmit = async (e) => {
     e.preventDefault()
     const data = new FormData(e.target)
     const { image, prompt } = Object.fromEntries(data)
     const base64Image = await convertFileToBase64(image)
-    setImage(base64Image)
+    console.log('generating image with prompt', prompt)
+    const generatedImage = await getGeneratedImage(base64Image, prompt)
+    const formattedImage = 'data:image/jpeg;base64,' + generatedImage
+    setImage(formattedImage)
   }
   return (
     <div className={styles.wrapper}>
